@@ -129,6 +129,16 @@ Environment Variables:
 
 ### Step 4.1: Initialize Database
 
+**SQLite (Default - No Setup Needed!)**
+- Database automatically creates as `chatbot_saas.db`
+- Works perfectly for starting out
+- No additional configuration needed
+
+**Optional: PostgreSQL (For Scale)**
+- Better for 100+ customers
+- Need to set DATABASE_URL environment variable
+- For now, SQLite is perfect!
+
 Your backend automatically creates the database. But let's verify:
 
 ```bash

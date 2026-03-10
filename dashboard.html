@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatBot SaaS Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        nav {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        nav h1 {
+            color: #007bff;
+            font-size: 24px;
+        }
+        
+        nav button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        nav button:hover {
+            background: #c82333;
+        }
+        
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .auth-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .toggle-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .toggle-link a {
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .dashboard {
+            display: none;
+        }
+        
+        .dashboard.active {
+            display: block;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .value {
+            color: #007bff;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .chatbots-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .chatbots-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .create-btn {
+            background: #28a745;
+            margin-bottom: 20px;
+        }
+        
+        .create-btn:hover {
+            background: #218838;
+        }
+        
+        .chatbots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .chatbot-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+        }
+        
+        .chatbot-card h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .chatbot-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .chatbot-card .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chatbot-card button {
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+        }
+        
+        .error {
+            color: #dc3545;
+            padding: 10px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .success {
+            color: #155724;
+            padding: 10px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="auth-container" class="auth-container">
+        <h2 id="auth-title">Login</h2>
+        <div id="auth-message"></div>
+        <div class="form-group">
+            <label>Business Name</label>
+            <input type="text" id="business-name" placeholder="Your Business Name" style="display:none;">
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Enter password">
+        </div>
+        <button id="auth-btn" onclick="handleAuth()">Login</button>
+        <div class="toggle-link">
+            Don't have an account? <a onclick="toggleAuth()">Register</a>
+        </div>
+    </div>
+
+    <div id="dashboard" class="dashboard">
+        <nav>
+            <h1>ChatBot SaaS</h1>
+            <button onclick="logout()">Logout</button>
+        </nav>
+        
+        <div class="container">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>Total Chatbots</h3>
+                    <div class="value" id="chatbot-count">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Tokens Used</h3>
+                    <div class="value" id="tokens-used">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Est. Cost</h3>
+                    <div class="value" id="est-cost">₹0</div>
+                </div>
+            </div>
+            
+            <div class="chatbots-section">
+                <h2>Your Chatbots</h2>
+                <button class="create-btn" onclick="createChatbot()">+ Create New Chatbot</button>
+                <div class="chatbots-grid" id="chatbots-list">
+                    <p>Loading chatbots...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        let isLogin = true;
+        let token = localStorage.getItem('token');
+        let chatbots = [];
+
+        // Check if already logged in
+        if (token) {
+            showDashboard();
+            fetchChatbots();
+        } else {
+            showAuth();
+        }
+
+        function toggleAuth() {
+            isLogin = !isLogin;
+            document.getElementById('auth-title').textContent = isLogin ? 'Login' : 'Register';
+            document.getElementById('auth-btn').textContent = isLogin ? 'Login' : 'Create Account';
+            document.getElementById('business-name').style.display = isLogin ? 'none' : 'block';
+            document.getElementById('auth-message').innerHTML = '';
+        }
+
+        function handleAuth() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const businessName = document.getElementById('business-name').value;
+
+            if (!email || !password) {
+                showMessage('Email and password required', 'error');
+                return;
+            }
+
+            if (!isLogin && !businessName) {
+                showMessage('Business name required', 'error');
+                return;
+            }
+
+            const endpoint = isLogin ? '/auth/login' : '/auth/register';
+            const body = isLogin 
+                ? { email, password }
+                : { email, password, business_name: businessName };
+
+            fetch(`${API_URL}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.access_token) {
+                    localStorage.setItem('token', data.access_token);
+                    token = data.access_token;
+                    showDashboard();
+                    fetchChatbots();
+                } else {
+                    showMessage(data.error || 'Error', 'error');
+                }
+            })
+            .catch(err => showMessage(err.message, 'error'));
+        }
+
+        function showAuth() {
+            document.getElementById('auth-container').style.display = 'block';
+            document.getElementById('dashboard').classList.remove('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            token = null;
+            isLogin = true;
+            showAuth();
+        }
+
+        function fetchChatbots() {
+            fetch(`${API_URL}/chatbots`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(r => r.json())
+            .then(data => {
+                chatbots = data;
+                document.getElementById('chatbot-count').textContent = data.length;
+                displayChatbots(data);
+            })
+            .catch(err => console.error('Error fetching chatbots:', err));
+        }
+
+        function displayChatbots(bots) {
+            const container = document.getElementById('chatbots-list');
+            if (bots.length === 0) {
+                container.innerHTML = '<p>No chatbots yet. Create one!</p>';
+                return;
+            }
+            
+            container.innerHTML = bots.map(bot => `
+                <div class="chatbot-card">
+                    <h3>${bot.name}</h3>
+                    <p>${bot.description || 'No description'}</p>
+                    <div class="actions">
+                        <button onclick="editChatbot('${bot.id}')">Edit</button>
+                        <button onclick="viewEmbed('${bot.id}')">Embed</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function createChatbot() {
+            const name = prompt('Chatbot name:');
+            if (!name) return;
+
+            const desc = prompt('Description (optional):');
+            
+            fetch(`${API_URL}/chatbots`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    name: name,
+                    description: desc || '',
+                    system_prompt: 'You are a helpful customer service assistant.',
+                    widget_color: '#007bff',
+                    welcome_message: 'Hello! How can I help you today?'
+                })
+            })
+            .then(r => r.json())
+            .then(data => {
+                showMessage('Chatbot created!', 'success');
+                fetchChatbots();
+            })
+            .catch(err => showMessage(err.message, 'error'));
+        }
+
+        function editChatbot(id) {
+            alert('Edit feature coming soon!');
+        }
+
+        function viewEmbed(id) {
+            alert('Embed code: <script src="' + API_URL + '/embed/' + id + '"></script>');
+        }
+
+        function showMessage(msg, type) {
+            const container = document.getElementById('auth-message');
+            container.innerHTML = `<div class="${type}">${msg}</div>`;
+            if (type === 'success') {
+                setTimeout(() => container.innerHTML = '', 3000);
+            }
+        }
+    </script>
+</body>
+</html>

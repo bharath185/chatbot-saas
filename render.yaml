@@ -2,16 +2,11 @@ services:
   - type: web
     name: chatbot-saas-backend
     runtime: python
-    runtimeVersion: 3.11
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"
-    plan: free
+    runtimeVersion: 3.11.5
+    buildCommand: "pip install --no-cache-dir -r requirements.txt"
+    startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT --workers 1"
     envVars:
-      - key: ANTHROPIC_API_KEY
-        scope: build,runtime
-      - key: JWT_SECRET_KEY
-        scope: build,runtime
-      - key: DATABASE_URL
-        scope: build,runtime
       - key: FLASK_ENV
         value: production
+      - key: PYTHONUNBUFFERED
+        value: true

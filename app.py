@@ -31,7 +31,13 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 # Initialize extensions
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
-anthropic_client = Anthropic(api_key=os.environ.get('ANTHROPIC_API_KEY'))
+
+# Initialize Anthropic client - handle API key safely
+api_key = os.environ.get('ANTHROPIC_API_KEY')
+if api_key:
+    anthropic_client = Anthropic(api_key=api_key)
+else:
+    anthropic_client = None
 
 # ==================== DATABASE MODELS ====================
 
@@ -258,6 +264,10 @@ def chat(chatbot_id):
         })
     
     try:
+        # Check if API key is configured
+        if not anthropic_client:
+            return jsonify({'error': 'Claude API key not configured. Contact administrator.'}), 500
+        
         # Call Claude API
         response = anthropic_client.messages.create(
             model='claude-3-5-sonnet-20241022',

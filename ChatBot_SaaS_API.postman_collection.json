@@ -1,0 +1,285 @@
+{
+  "info": {
+    "name": "ChatBot SaaS API",
+    "description": "Complete API collection for testing all endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/health",
+              "host": ["{{BASE_URL}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/health",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"test123456\",\n  \"business_name\": \"Test Business\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/register",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"test123456\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/auth/login",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chatbots",
+      "item": [
+        {
+          "name": "Get All Chatbots",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/chatbots",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "chatbots"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Chatbot",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Customer Support Bot\",\n  \"description\": \"Handles customer inquiries\",\n  \"system_prompt\": \"You are a helpful customer service assistant. Answer questions about our products and services.\",\n  \"widget_color\": \"#007bff\",\n  \"welcome_message\": \"Hello! How can I help you today?\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/chatbots",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "chatbots"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Chatbot Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/chatbots/{{CHATBOT_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "chatbots", "{{CHATBOT_ID}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Chatbot",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Bot Name\",\n  \"description\": \"Updated description\",\n  \"system_prompt\": \"You are an expert customer service representative.\",\n  \"widget_color\": \"#28a745\",\n  \"welcome_message\": \"Welcome! I'm here to help.\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/chatbots/{{CHATBOT_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "chatbots", "{{CHATBOT_ID}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Send Message (Public - No Auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Hello, can you help me?\",\n  \"visitor_id\": \"visitor-123\",\n  \"conversation_id\": null\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/chat/{{CHATBOT_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "chat", "{{CHATBOT_ID}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Get Chatbot Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/analytics/{{CHATBOT_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "analytics", "{{CHATBOT_ID}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Usage",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/usage",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "usage"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Embed",
+      "item": [
+        {
+          "name": "Get Embed Code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/embed/{{CHATBOT_ID}}",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "embed", "{{CHATBOT_ID}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "https://your-backend.onrender.com",
+      "type": "string"
+    },
+    {
+      "key": "TOKEN",
+      "value": "your-jwt-token-here",
+      "type": "string"
+    },
+    {
+      "key": "CHATBOT_ID",
+      "value": "chatbot-id-here",
+      "type": "string"
+    }
+  ]
+}
